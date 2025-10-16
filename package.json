@@ -1,0 +1,41 @@
+{
+  "name": "ai_travel_planner",
+  "version": "1.0.0",
+  "description": "AI-powered travel planning application",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ShadowOnYOU/AI_travel_Planner.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ShadowOnYOU/AI_travel_Planner/issues"
+  },
+  "homepage": "https://github.com/ShadowOnYOU/AI_travel_Planner#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.75.0",
+    "@types/node": "^24.7.2",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "next": "^15.5.5",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.14",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^9.37.0",
+    "eslint-config-next": "^15.5.5",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.18"
+  }
+}
