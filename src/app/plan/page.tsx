@@ -1,14 +1,16 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { TravelRequirements } from '@/types/travel';
+import { AIGenerationResponse } from '@/types/ai';
 import TravelForm from '@/components/TravelForm';
 import { useAuth } from '@/contexts/AuthContext';
 
 export default function PlanPage() {
   const router = useRouter();
   const { user, signOut } = useAuth();
+  const [isGenerating, setIsGenerating] = useState(false);
 
   // 如果用户未登录，重定向到登录页面
   React.useEffect(() => {
@@ -21,16 +23,36 @@ export default function PlanPage() {
   const handleSubmit = async (data: TravelRequirements) => {
     try {
       console.log('旅行需求数据:', data);
+      setIsGenerating(true);
       
-      // TODO: 这里将调用AI API生成行程
-      // 暂时显示成功消息
-      alert('旅行需求已提交，AI正在为您生成行程...');
+      // 调用AI API生成行程
+      const response = await fetch('/api/generate-itinerary', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const result: AIGenerationResponse = await response.json();
       
-      // TODO: 跳转到行程页面
-      // router.push('/itinerary');
+      if (result.success && result.data) {
+        console.log('生成的行程:', result.data);
+        
+        // 将行程数据保存到localStorage（临时方案）
+        localStorage.setItem('currentItinerary', JSON.stringify(result.data));
+        
+        // 跳转到行程展示页面
+        router.push('/itinerary');
+      } else {
+        throw new Error(result.error || '生成行程失败');
+      }
+      
     } catch (error) {
-      console.error('提交失败:', error);
-      alert('提交失败，请重试');
+      console.error('生成行程失败:', error);
+      alert(error instanceof Error ? error.message : '生成行程失败，请重试');
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -79,7 +101,7 @@ export default function PlanPage() {
       {/* 主要内容 */}
       <main className="py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <TravelForm onSubmit={handleSubmit} />
+          <TravelForm onSubmit={handleSubmit} loading={isGenerating} />
         </div>
       </main>
 
