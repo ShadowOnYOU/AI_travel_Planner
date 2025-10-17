@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useAuth } from '@/lib/auth-context'
+import { useAuth } from '@/contexts/AuthContext'
 import { isSupabaseConfigured } from '@/lib/supabase'
 
 export default function Home() {
@@ -67,8 +67,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <div className="text-center max-w-4xl mx-auto">
+      <div className="relative flex place-items-center py-16">
+        <div className="text-center max-w-4xl mx-auto relative z-10">
           <h2 className="mb-6 text-3xl font-semibold">
             欢迎使用 AI Travel Planner
           </h2>
@@ -89,7 +89,7 @@ export default function Home() {
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
                 <Link 
-                  href="/plan/new"
+                  href="/plan"
                   className="bg-blue-600 text-white p-6 rounded-xl hover:bg-blue-700 transition-colors group"
                 >
                   <div className="text-3xl mb-3">✈️</div>
