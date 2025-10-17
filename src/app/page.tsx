@@ -114,6 +114,15 @@ export default function Home() {
                   <h3 className="text-lg font-semibold mb-2">费用管理</h3>
                   <p className="text-sm opacity-90">记录和分析旅行开支</p>
                 </Link>
+                
+                <Link 
+                  href="/test/speech"
+                  className="bg-orange-600 text-white p-6 rounded-xl hover:bg-orange-700 transition-colors group"
+                >
+                  <div className="text-3xl mb-3">🎤</div>
+                  <h3 className="text-lg font-semibold mb-2">语音测试</h3>
+                  <p className="text-sm opacity-90">测试语音识别功能</p>
+                </Link>
               </div>
             </div>
           ) : (
@@ -121,7 +130,7 @@ export default function Home() {
               <p className="text-lg text-gray-600 mb-8">
                 让AI为您量身定制完美的旅行计划 ✨
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-6">
                 <Link
                   href="/auth/signup"
                   className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 font-medium"
@@ -135,13 +144,32 @@ export default function Home() {
                   已有账户登录
                 </Link>
               </div>
+              <div className="pt-4 border-t border-gray-200">
+                <div className="flex gap-3 justify-center">
+                  <Link
+                    href="/test/web-speech"
+                    className="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 font-medium inline-flex items-center gap-2"
+                  >
+                    🌐 Web语音识别
+                  </Link>
+                  <Link
+                    href="/test/speech"
+                    className="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 font-medium inline-flex items-center gap-2"
+                  >
+                    � 讯飞语音识别
+                  </Link>
+                </div>
+              </div>
             </div>
           )}
         </div>
       </div>
 
       <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <div className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
+        <Link 
+          href="/test/web-speech"
+          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30 cursor-pointer"
+        >
           <h2 className="mb-3 text-2xl font-semibold">
             语音输入 {' '}
             <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
@@ -151,7 +179,10 @@ export default function Home() {
           <p className="m-0 max-w-[30ch] text-sm opacity-50">
             支持语音输入旅行需求，让规划更加便捷
           </p>
-        </div>
+          <p className="mt-2 text-xs text-green-600 font-medium">
+            👆 点击测试Web语音识别
+          </p>
+        </Link>
 
         <div className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30">
           <h2 className="mb-3 text-2xl font-semibold">
