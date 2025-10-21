@@ -40,8 +40,56 @@ export interface TravelItinerary {
   days: DayItinerary[];
   summary: string;
   recommendations: string[];
+  status?: 'draft' | 'confirmed' | 'completed' | 'cancelled';
+  tags?: string[];
+  isPublic?: boolean;
   createdAt: string;
   updatedAt?: string;
+}
+
+// 行程集合管理
+export interface ItineraryCollection {
+  total: number;
+  itineraries: TravelItinerary[];
+  page: number;
+  limit: number;
+}
+
+// 行程搜索和筛选参数
+export interface ItineraryFilterOptions {
+  search?: string;
+  destination?: string;
+  status?: TravelItinerary['status'];
+  dateRange?: {
+    start: string;
+    end: string;
+  };
+  budgetRange?: {
+    min: number;
+    max: number;
+  };
+  tags?: string[];
+  sortBy?: 'createdAt' | 'startDate' | 'title' | 'actualCost';
+  sortOrder?: 'asc' | 'desc';
+  page?: number;
+  limit?: number;
+}
+
+// 行程统计数据
+export interface ItineraryStats {
+  totalItineraries: number;
+  completedItineraries: number;
+  totalSpent: number;
+  averageCost: number;
+  favoriteDestinations: Array<{
+    destination: string;
+    count: number;
+  }>;
+  monthlyActivity: Array<{
+    month: string;
+    count: number;
+    totalCost: number;
+  }>;
 }
 
 export interface AIGenerationRequest {

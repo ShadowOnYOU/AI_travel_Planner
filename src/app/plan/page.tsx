@@ -39,11 +39,20 @@ export default function PlanPage() {
       if (result.success && result.data) {
         console.log('生成的行程:', result.data);
         
-        // 将行程数据保存到localStorage（临时方案）
-        localStorage.setItem('currentItinerary', JSON.stringify(result.data));
+        // 确保行程有正确的用户ID和状态
+        const itinerary = {
+          ...result.data,
+          userId: user?.id,
+          status: 'draft' as const,
+          tags: [result.data.destination, result.data.travelStyle],
+          isPublic: false
+        };
         
-        // 跳转到行程展示页面
-        router.push('/itinerary');
+        // 将行程数据保存到localStorage作为当前行程
+        localStorage.setItem('currentItinerary', JSON.stringify(itinerary));
+        
+        // 跳转到行程详情页面（使用新的详情路由）
+        router.push(`/itinerary/${itinerary.id}`);
       } else {
         throw new Error(result.error || '生成行程失败');
       }

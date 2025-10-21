@@ -36,7 +36,7 @@ export default function Home() {
                 欢迎, {user.email}
               </span>
               <Link
-                href="/dashboard"
+                href="/itinerary"
                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
               >
                 我的行程
@@ -98,7 +98,7 @@ export default function Home() {
                 </Link>
                 
                 <Link 
-                  href="/dashboard"
+                  href="/itinerary"
                   className="bg-green-600 text-white p-6 rounded-xl hover:bg-green-700 transition-colors group"
                 >
                   <div className="text-3xl mb-3">📋</div>
