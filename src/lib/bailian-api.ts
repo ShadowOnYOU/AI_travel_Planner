@@ -277,15 +277,22 @@ function generateDayItems(day: number, requirements: AIGenerationRequest, dailyB
  * 根据配置选择使用真实API还是模拟数据
  */
 export async function generateItinerary(requirements: AIGenerationRequest): Promise<AIGenerationResponse> {
-  // 暂时使用模拟数据，因为需要验证API端点
-  console.log('目前使用模拟数据生成行程，API端点需要验证');
-  return generateMockItinerary(requirements);
+  console.log('检查百炼API配置状态:', {
+    hasApiKey: !!BAILIAN_CONFIG.apiKey && BAILIAN_CONFIG.apiKey !== '',
+    baseUrl: BAILIAN_CONFIG.baseUrl,
+    modelId: BAILIAN_CONFIG.modelId
+  });
   
-  // TODO: 验证正确的API端点后启用
-  // if (isBailianConfigured()) {
-  //   return generateTravelItinerary(requirements);
-  // } else {
-  //   console.warn('阿里云百炼API未配置，使用模拟数据');
-  //   return generateMockItinerary(requirements);
-  // }
+  if (isBailianConfigured()) {
+    console.log('使用阿里云百炼真实API生成行程');
+    try {
+      return await generateTravelItinerary(requirements);
+    } catch (error) {
+      console.error('真实API调用失败，降级到模拟数据:', error);
+      return await generateMockItinerary(requirements);
+    }
+  } else {
+    console.warn('阿里云百炼API未配置，使用模拟数据');
+    return await generateMockItinerary(requirements);
+  }
 }
