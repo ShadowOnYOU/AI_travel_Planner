@@ -5,9 +5,8 @@ import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { ItineraryService } from '@/lib/itinerary-service';
 import { TravelItinerary } from '@/types/ai';
-import MapComponent, { MapPoint } from '@/components/MapComponent';
-import NavigationPanel from '@/components/NavigationPanel';
-import PointDetailModal from '@/components/PointDetailModal';
+import SimpleMapComponent from '@/components/SimpleMapComponent';
+import { MapPoint } from '@/types/travel';
 
 export default function ItineraryMapPage() {
   const { user } = useAuth();
@@ -17,16 +16,20 @@ export default function ItineraryMapPage() {
   const [itinerary, setItinerary] = useState<TravelItinerary | null>(null);
   const [loading, setLoading] = useState(true);
   const [mapPoints, setMapPoints] = useState<MapPoint[]>([]);
-  const [selectedDay, setSelectedDay] = useState(1);
+  const [selectedDay, setSelectedDay] = useState(0); // 0 表示显示所有天
   const [showRoutes, setShowRoutes] = useState(true);
-  const [selectedNavPoint, setSelectedNavPoint] = useState<MapPoint | null>(null);
-  const [selectedDetailPoint, setSelectedDetailPoint] = useState<MapPoint | null>(null);
-  const [showNavigation, setShowNavigation] = useState(false);
-  const [showPointDetail, setShowPointDetail] = useState(false);
 
   // 生成地图点位
   const generateMapPoints = async (itinerary: TravelItinerary) => {
     const points: MapPoint[] = [];
+    
+    // 动态导入地理编码工具
+    const { getCenterCoordinates, generateRealisticCoordinates } = await import('@/utils/geocoding');
+    
+    // 获取目的地的中心坐标
+    const baseCoords = getCenterCoordinates(itinerary.destination);
+    
+    console.log('🗺️ [MapPage] 目的地:', itinerary.destination, '中心坐标:', baseCoords);
     
     itinerary.days.forEach((day) => {
       day.items.forEach((item, index) => {
@@ -38,39 +41,42 @@ export default function ItineraryMapPage() {
           mapType = item.type as MapPoint['type'];
         }
 
+        // 生成真实的坐标
+        let coordinates: [number, number];
+        
+        if (item.coordinates?.lng && item.coordinates?.lat) {
+          // 如果已有坐标，直接使用
+          coordinates = [item.coordinates.lng, item.coordinates.lat];
+        } else {
+          // 使用地理编码工具生成真实坐标
+          coordinates = generateRealisticCoordinates(item.title, itinerary.destination, baseCoords);
+        }
+
         const point: MapPoint = {
           id: `day${day.day}-item${index}`,
           name: item.title, // 使用title作为name
-          location: [
-            item.coordinates?.lng || 116.404 + Math.random() * 0.1,
-            item.coordinates?.lat || 39.915 + Math.random() * 0.1
-          ],
+          coordinates: coordinates,
           type: mapType,
           day: day.day,
-          time: item.time,
-          description: item.description,
-          cost: item.cost,
-          duration: item.duration
+          description: item.description
         };
+        
+        console.log('📍 [MapPage] 生成地点:', {
+          name: point.name,
+          coordinates: point.coordinates,
+          type: point.type,
+          day: point.day
+        });
+        
         points.push(point);
       });
     });
     
+    console.log('🎯 [MapPage] 生成地图点位完成:', points.length, '个地点');
     setMapPoints(points);
   };
 
-  // 处理地图点击
-  const handleMapPointClick = (point: MapPoint) => {
-    setSelectedDetailPoint(point);
-    setShowPointDetail(true);
-  };
 
-  // 处理导航
-  const handleNavigateToPoint = (point: MapPoint) => {
-    setSelectedNavPoint(point);
-    setShowNavigation(true);
-    setShowPointDetail(false);
-  };
 
   // 加载行程数据
   useEffect(() => {
@@ -269,35 +275,125 @@ export default function ItineraryMapPage() {
                   {selectedDay === 0 ? '全部地点' : `第${selectedDay}天地点`}
                 </h2>
                 <div className="text-sm text-gray-600">
-                  {currentDayPoints.length} 个地点
+                  {selectedDay === 0 ? mapPoints.length : mapPoints.filter(p => p.day === selectedDay).length} 个地点
                 </div>
               </div>
               
-              <MapComponent
-                points={currentDayPoints}
-                showRoutes={showRoutes}
-                className="w-full h-[600px] rounded-lg"
-                onPointClick={handleMapPointClick}
-              />
+              <SimpleMapComponent points={selectedDay === 0 ? mapPoints : mapPoints.filter(p => p.day === selectedDay)} />
             </div>
+
+            {/* 路线时间轴 */}
+            {itinerary && (
+              <div className="mt-6 bg-white rounded-xl shadow-lg p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  📅 {selectedDay === 0 ? '完整行程路线' : `第${selectedDay}天路线`}
+                </h3>
+                
+                {selectedDay === 0 ? (
+                  // 显示所有天的路线
+                  <div className="space-y-6">
+                    {itinerary.days.map((day) => (
+                      <div key={day.day} className="border-l-4 border-blue-200 pl-4">
+                        <h4 className="font-semibold text-gray-800 mb-3">
+                          第{day.day}天 - {day.date}
+                        </h4>
+                        <div className="space-y-3">
+                          {day.items.map((item, index) => (
+                            <div key={item.id} className="flex items-start gap-3">
+                              <div className="flex-shrink-0 w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-sm font-medium">
+                                {index + 1}
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <span className="font-medium text-gray-800">{item.title}</span>
+                                  <span className="text-sm text-gray-500">
+                                    {item.time}
+                                  </span>
+                                  <span className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded">
+                                    {item.type === 'attraction' ? '🎯 景点' : 
+                                     item.type === 'restaurant' ? '🍽️ 餐厅' :
+                                     item.type === 'hotel' ? '🏨 住宿' :
+                                     item.type === 'transport' ? '🚇 交通' : '🎪 活动'}
+                                  </span>
+                                </div>
+                                <p className="text-sm text-gray-600 mb-2">{item.description}</p>
+                                {item.location && (
+                                  <p className="text-xs text-gray-500">📍 {item.location}</p>
+                                )}
+                                {item.cost && (
+                                  <p className="text-xs text-green-600 mt-1">💰 ¥{item.cost}</p>
+                                )}
+                              </div>
+                              {index < day.items.length - 1 && (
+                                <div className="flex-shrink-0 text-gray-400 text-sm ml-4">
+                                  ↓
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  // 显示特定天的路线
+                  <div className="space-y-3">
+                    {itinerary.days
+                      .find(d => d.day === selectedDay)?.items
+                      .map((item, index, array) => (
+                        <div key={item.id} className="flex items-start gap-3">
+                          <div className="flex-shrink-0 w-10 h-10 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center font-medium">
+                            {index + 1}
+                          </div>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <span className="font-semibold text-gray-800 text-lg">{item.title}</span>
+                              <span className="text-blue-600 font-medium">
+                                {item.time}
+                              </span>
+                              <span className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm">
+                                {item.type === 'attraction' ? '🎯 景点' : 
+                                 item.type === 'restaurant' ? '🍽️ 餐厅' :
+                                 item.type === 'hotel' ? '🏨 住宿' :
+                                 item.type === 'transport' ? '🚇 交通' : '🎪 活动'}
+                              </span>
+                            </div>
+                            <p className="text-gray-600 mb-2">{item.description}</p>
+                            <div className="flex items-center gap-4 text-sm text-gray-500">
+                              {item.location && (
+                                <span>📍 {item.location}</span>
+                              )}
+                              {item.duration && (
+                                <span>⏱️ {item.duration}分钟</span>
+                              )}
+                              {item.cost && (
+                                <span className="text-green-600">💰 ¥{item.cost}</span>
+                              )}
+                            </div>
+                            {item.notes && (
+                              <div className="mt-2 p-2 bg-yellow-50 rounded text-sm text-yellow-800">
+                                💡 {item.notes}
+                              </div>
+                            )}
+                          </div>
+                          {index < array.length - 1 && (
+                            <div className="flex flex-col items-center mt-4">
+                              <div className="w-px h-6 bg-gray-300"></div>
+                              <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                              <div className="w-px h-6 bg-gray-300"></div>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      {/* 地点详情弹窗 */}
-      <PointDetailModal
-        isOpen={showPointDetail}
-        point={selectedDetailPoint}
-        onClose={() => setShowPointDetail(false)}
-        onNavigate={selectedDetailPoint ? () => handleNavigateToPoint(selectedDetailPoint) : undefined}
-      />
 
-      {/* 导航面板 */}
-      <NavigationPanel
-        isOpen={showNavigation}
-        destination={selectedNavPoint}
-        onClose={() => setShowNavigation(false)}
-      />
     </div>
   );
 }

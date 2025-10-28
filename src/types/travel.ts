@@ -166,3 +166,14 @@ export const DEFAULT_FORM_DATA: TravelRequirements = {
   accommodation: 'hotel',
   interests: [],
 };
+
+// 地图相关类型
+export interface MapPoint {
+  id: string;
+  name: string;
+  coordinates: [number, number]; // [经度, 纬度]
+  type?: 'attraction' | 'restaurant' | 'hotel' | 'transport';
+  description?: string;
+  address?: string;
+  day?: number; // 行程天数
+}
