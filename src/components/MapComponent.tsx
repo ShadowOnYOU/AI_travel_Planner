@@ -53,24 +53,14 @@ export default function MapComponent({
 
     const initMap = async () => {
       try {
-        console.log('🗺️ [MapComponent] 开始初始化地图');
         setIsLoading(true);
         const apiKey = getAMapKey();
         
-        console.log('🔑 [MapComponent] API Key获取结果:', apiKey === 'your_amap_api_key' ? '未配置' : '已配置');
-        
         if (apiKey === 'your_amap_api_key') {
-          console.warn('⚠️ [MapComponent] API Key未配置');
           setError('请在设置中配置高德地图API Key');
           setIsLoading(false);
           return;
         }
-
-        console.log('🔄 [MapComponent] 加载高德地图SDK', {
-          key: apiKey.substring(0, 8) + '...',
-          version: '2.0',
-          plugins: ['AMap.Scale', 'AMap.ToolBar', 'AMap.MapType']
-        });
 
         // 动态导入AMapLoader避免SSR问题
         const AMapLoader = (await import('@amap/amap-jsapi-loader')).default;
@@ -81,7 +71,7 @@ export default function MapComponent({
           plugins: ['AMap.Scale', 'AMap.ToolBar', 'AMap.MapType'],
         });
 
-        console.log('✅ [MapComponent] 高德地图SDK加载成功');
+
 
         const mapConfig = {
           zoom,
@@ -89,23 +79,23 @@ export default function MapComponent({
           mapStyle: 'amap://styles/normal',
           viewMode: '2D',
         };
-        console.log('🏗️ [MapComponent] 创建地图实例', mapConfig);
+
 
         const mapInstance = new AMap.Map(mapRef.current, mapConfig);
 
         // 添加控件
-        console.log('🎛️ [MapComponent] 添加地图控件');
+
         mapInstance.addControl(new AMap.Scale());
         mapInstance.addControl(new AMap.ToolBar());
 
         // 等待地图完全加载
         mapInstance.on('complete', () => {
-          console.log('✅ [MapComponent] 地图完全加载完成');
+
           setMap(mapInstance);
           setError(null);
         });
         
-        console.log('🎯 [MapComponent] 地图实例创建完成，等待加载...');
+
       } catch (err) {
         console.error('❌ [MapComponent] 地图初始化失败:', err);
         console.error('❌ [MapComponent] 错误详情:', {
@@ -115,7 +105,7 @@ export default function MapComponent({
         });
         setError('地图加载失败，请检查网络连接和API Key');
       } finally {
-        console.log('🏁 [MapComponent] 地图初始化流程结束');
+
         setIsLoading(false);
       }
     };
@@ -138,10 +128,8 @@ export default function MapComponent({
   useEffect(() => {
     if (map) {
       try {
-        console.log('📍 [MapComponent] 更新地图视野', { center, zoom });
         map.setCenter(center);
         map.setZoom(zoom);
-        console.log('✅ [MapComponent] 地图视野更新成功');
       } catch (error) {
         console.warn('⚠️ [MapComponent] 更新地图视野失败:', error);
       }
@@ -151,16 +139,16 @@ export default function MapComponent({
   // 添加地图标记
   useEffect(() => {
     if (!map) {
-      console.log('⏳ [MapComponent] 地图实例未就绪');
+
       return;
     }
     
     if (!stablePoints.length) {
-      console.log('⏳ [MapComponent] 暂无地图点位数据');
+
       return;
     }
 
-    console.log('🏷️ [MapComponent] 开始添加地图标记', stablePoints.length, '个点位');
+
 
     // 定义添加标记的函数
     const addMarkersToMap = () => {
@@ -168,7 +156,7 @@ export default function MapComponent({
       try {
         if (typeof map.clearMap === 'function') {
           map.clearMap();
-          console.log('🧹 [MapComponent] 清理现有标记完成');
+
         }
       } catch (error) {
         console.warn('⚠️ [MapComponent] 清理地图标记失败:', error);
@@ -178,12 +166,6 @@ export default function MapComponent({
       
       stablePoints.forEach((point: MapPoint, index: number) => {
       try {
-        console.log(`📍 [MapComponent] 正在添加标记 ${index + 1}/${stablePoints.length}:`, {
-          name: point.name,
-          location: point.location,
-          type: point.type
-        });
-        
         // 验证坐标有效性
         if (!Array.isArray(point.location) || point.location.length !== 2) {
           console.warn('⚠️ [MapComponent] 无效坐标格式:', point.location);
@@ -242,7 +224,7 @@ export default function MapComponent({
           } else {
             // 如果LngLat类不可用，直接使用数组格式
             position = [lng, lat];
-            console.log('📍 [MapComponent] 使用数组格式坐标:', position);
+
           }
           
           // 验证位置对象
@@ -250,18 +232,11 @@ export default function MapComponent({
             throw new Error('位置对象创建失败');
           }
           
-          console.log('✅ [MapComponent] 位置对象创建成功:', {
-            name: point.name,
-            originalCoords: point.location,
-            processedCoords: [lng, lat],
-            position: position
-          });
-          
         } catch (error) {
           console.warn('⚠️ [MapComponent] 创建位置对象失败:', error, { lng, lat });
           // 降级使用数组格式
           position = [lng, lat];
-          console.log('🔄 [MapComponent] 降级使用数组格式:', position);
+
         }
 
         const marker = new (window as any).AMap.Marker({
@@ -276,7 +251,7 @@ export default function MapComponent({
 
         // 添加点击事件
         marker.on('click', () => {
-          console.log('🎯 [MapComponent] 标记点击:', point.name);
+
           if (onPointClick) {
             onPointClick(point);
           }
@@ -285,13 +260,13 @@ export default function MapComponent({
         map.add(marker);
         addedCount++;
         
-        console.log(`✅ [MapComponent] 标记添加成功: ${point.name}`);
+
       } catch (error) {
         console.warn('❌ [MapComponent] 添加地图标记失败:', error, point);
       }
     });
       
-      console.log(`🎯 [MapComponent] 标记添加完成: ${addedCount}/${stablePoints.length}`);
+
 
       // 简单的路线绘制
       if (showRoutes && stablePoints.length > 1) {

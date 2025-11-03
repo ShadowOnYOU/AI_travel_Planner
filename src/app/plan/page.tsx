@@ -22,7 +22,6 @@ export default function PlanPage() {
   // 处理表单提交
   const handleSubmit = async (data: TravelRequirements) => {
     try {
-      console.log('旅行需求数据:', data);
       setIsGenerating(true);
       
       // 调用AI API生成行程
@@ -37,7 +36,6 @@ export default function PlanPage() {
       const result: AIGenerationResponse = await response.json();
       
       if (result.success && result.data) {
-        console.log('生成的行程:', result.data);
         
         // 确保行程有正确的用户ID和状态
         const itinerary = {
@@ -67,38 +65,50 @@ export default function PlanPage() {
 
   if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">正在加载...</p>
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500 border-t-transparent mx-auto mb-4"></div>
+          <p className="text-gray-600 font-medium">正在加载...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* 导航栏 */}
-      <nav className="bg-white shadow-sm border-b">
+      <nav className="w-full bg-white/80 backdrop-blur-md shadow-sm border-b border-gray-100 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
+          <div className="flex justify-between items-center h-16">
+            <div className="flex items-center space-x-3">
               <button
                 onClick={() => router.push('/')}
-                className="flex items-center space-x-2 text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors"
+                className="flex items-center space-x-3 group"
               >
-                <span className="text-2xl">✈️</span>
-                <span>AI旅行规划师</span>
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">✈️</span>
+                </div>
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent group-hover:from-blue-700 group-hover:to-purple-700 transition-all">
+                  AI Travel Planner
+                </h1>
               </button>
             </div>
             
             <div className="flex items-center space-x-4">
-              <span className="text-gray-600">
-                欢迎，{user.email}
-              </span>
+              {user?.email && (
+                <span className="text-sm text-gray-600 hidden sm:inline">
+                  欢迎，{user.email}
+                </span>
+              )}
+              <button
+                onClick={() => router.push('/itinerary')}
+                className="text-blue-600 hover:text-blue-700 px-3 py-2 rounded-lg hover:bg-blue-50 transition-all duration-200"
+              >
+                我的行程
+              </button>
               <button
                 onClick={() => signOut()}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                className="text-gray-600 hover:text-gray-800 px-3 py-2 rounded-lg hover:bg-gray-100 transition-all duration-200"
               >
                 退出
               </button>
@@ -108,21 +118,45 @@ export default function PlanPage() {
       </nav>
 
       {/* 主要内容 */}
-      <main className="py-8">
+      <main className="py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* 页面标题 */}
+          <div className="text-center mb-12">
+            <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent mb-4">
+              创建新行程
+            </h2>
+            <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
+              告诉我们您的旅行偏好，AI将为您量身定制完美的行程计划 ✨
+            </p>
+          </div>
+          
           <TravelForm onSubmit={handleSubmit} loading={isGenerating} />
         </div>
       </main>
 
       {/* 页脚提示 */}
-      <footer className="bg-white border-t mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center text-gray-600">
-            <p className="mb-2">
-              💡 提示：使用语音输入可以更快地描述您的旅行偏好
-            </p>
-            <p className="text-sm">
-              AI将根据您的需求生成个性化的旅行行程，包括景点推荐、路线规划和预算估算
+      <footer className="bg-white/70 backdrop-blur-md border-t border-gray-100 mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-2xl border border-blue-200">
+                <div className="text-3xl mb-3">🎤</div>
+                <h3 className="text-lg font-semibold text-blue-800 mb-2">语音输入</h3>
+                <p className="text-blue-700 text-sm">使用语音输入可以更快地描述您的旅行偏好</p>
+              </div>
+              <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-2xl border border-purple-200">
+                <div className="text-3xl mb-3">🤖</div>
+                <h3 className="text-lg font-semibold text-purple-800 mb-2">AI智能规划</h3>
+                <p className="text-purple-700 text-sm">AI将根据您的需求生成个性化的旅行行程</p>
+              </div>
+              <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-2xl border border-green-200">
+                <div className="text-3xl mb-3">📊</div>
+                <h3 className="text-lg font-semibold text-green-800 mb-2">全面规划</h3>
+                <p className="text-green-700 text-sm">包括景点推荐、路线规划和预算估算</p>
+              </div>
+            </div>
+            <p className="text-gray-600">
+              让我们开始您的精彩旅程吧！🌟
             </p>
           </div>
         </div>

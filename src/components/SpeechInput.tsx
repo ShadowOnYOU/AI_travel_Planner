@@ -35,16 +35,16 @@ export default function SpeechInput({
     reset,
   } = useSpeechRecognition({
     onResult: (result) => {
-      console.log('语音识别结果:', result);
+      // 语音识别结果处理
     },
     onError: (error) => {
       console.error('语音识别错误:', error);
     },
     onStart: () => {
-      console.log('语音识别开始');
+      // 语音识别开始
     },
     onEnd: () => {
-      console.log('语音识别结束');
+      // 语音识别结束
     },
     autoRestart,
     maxDuration,

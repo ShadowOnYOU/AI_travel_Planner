@@ -87,8 +87,6 @@ export default function ItineraryDetailPage() {
     if (!itinerary) return;
 
     try {
-      console.log('开始保存行程:', itinerary.id);
-      
       // 确保行程有所有必需的字段
       const savedItinerary: TravelItinerary = {
         ...itinerary,
@@ -100,11 +98,8 @@ export default function ItineraryDetailPage() {
         updatedAt: new Date().toISOString(),
       };
       
-      console.log('准备保存的行程数据:', savedItinerary);
-      
       await ItineraryService.saveItinerary(savedItinerary, user?.id);
       
-      console.log('行程保存成功');
       alert('行程已保存到我的行程列表！');
       
       // 可选：跳转到行程列表页面确认

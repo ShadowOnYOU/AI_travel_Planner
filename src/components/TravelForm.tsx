@@ -91,21 +91,11 @@ export default function TravelForm({
   const travelDays = calculateTravelDays(formData.startDate, formData.endDate);
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg">
-      {/* 表单标题 */}
-      <div className="mb-8 text-center">
-        <h2 className="text-3xl font-bold text-gray-900 mb-2">
-          ✈️ 规划您的完美旅行
-        </h2>
-        <p className="text-gray-600">
-          请填写您的旅行需求，AI将为您生成个性化行程
-        </p>
-      </div>
-
+    <div className="max-w-5xl mx-auto">
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* 基本信息部分 */}
-        <div className="bg-blue-50 p-6 rounded-lg">
-          <h3 className="text-xl font-semibold text-blue-900 mb-4 flex items-center">
+        <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-gray-100 p-8">
+          <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6 flex items-center">
             📍 基本信息
           </h3>
           
@@ -137,8 +127,8 @@ export default function TravelForm({
                 max="50"
                 value={formData.travelers}
                 onChange={(e) => handleChange('travelers', parseInt(e.target.value) || 1)}
-                className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  errors.travelers ? 'border-red-500' : 'border-gray-300'
+                className={`w-full p-4 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200 hover:border-gray-400 ${
+                  errors.travelers ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200'
                 }`}
               />
               {errors.travelers && (
@@ -156,8 +146,8 @@ export default function TravelForm({
                 value={formData.startDate}
                 onChange={(e) => handleChange('startDate', e.target.value)}
                 min={getTodayDateString()}
-                className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  errors.startDate ? 'border-red-500' : 'border-gray-300'
+                className={`w-full p-4 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200 hover:border-gray-400 ${
+                  errors.startDate ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200'
                 }`}
               />
               {errors.startDate && (
@@ -175,8 +165,8 @@ export default function TravelForm({
                 value={formData.endDate}
                 onChange={(e) => handleChange('endDate', e.target.value)}
                 min={formData.startDate || getTodayDateString()}
-                className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent ${
-                  errors.endDate ? 'border-red-500' : 'border-gray-300'
+                className={`w-full p-4 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200 hover:border-gray-400 ${
+                  errors.endDate ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200'
                 }`}
               />
               {errors.endDate && (
@@ -192,8 +182,8 @@ export default function TravelForm({
         </div>
 
         {/* 预算和风格 */}
-        <div className="bg-green-50 p-6 rounded-lg">
-          <h3 className="text-xl font-semibold text-green-900 mb-4 flex items-center">
+        <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-gray-100 p-8">
+          <h3 className="text-2xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent mb-6 flex items-center">
             💰 预算与风格
           </h3>
           
@@ -229,7 +219,7 @@ export default function TravelForm({
               <select
                 value={formData.travelStyle}
                 onChange={(e) => handleChange('travelStyle', e.target.value)}
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200 hover:border-gray-400"
               >
                 {TRAVEL_STYLE_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -242,8 +232,8 @@ export default function TravelForm({
         </div>
 
         {/* 交通和住宿偏好 */}
-        <div className="bg-purple-50 p-6 rounded-lg">
-          <h3 className="text-xl font-semibold text-purple-900 mb-4 flex items-center">
+        <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-gray-100 p-8">
+          <h3 className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-6 flex items-center">
             🚗 交通与住宿
           </h3>
           
@@ -299,8 +289,8 @@ export default function TravelForm({
         </div>
 
         {/* 兴趣偏好 */}
-        <div className="bg-yellow-50 p-6 rounded-lg">
-          <h3 className="text-xl font-semibold text-yellow-900 mb-4 flex items-center">
+        <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-gray-100 p-8">
+          <h3 className="text-2xl font-bold bg-gradient-to-r from-yellow-600 to-orange-600 bg-clip-text text-transparent mb-6 flex items-center">
             🎯 兴趣偏好
           </h3>
           
@@ -324,8 +314,8 @@ export default function TravelForm({
         </div>
 
         {/* 详细偏好 */}
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
+        <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-gray-100 p-8">
+          <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent mb-6 flex items-center">
             📝 详细偏好
           </h3>
           
@@ -350,44 +340,47 @@ export default function TravelForm({
           <button
             type="button"
             onClick={() => setShowPreview(!showPreview)}
-            className="mb-4 px-6 py-2 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+            className="mb-6 px-6 py-3 text-blue-600 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl hover:from-blue-100 hover:to-blue-200 transition-all duration-200 font-medium shadow-md hover:shadow-lg"
           >
-            {showPreview ? '隐藏预览' : '预览需求'}
+            {showPreview ? '🔼 隐藏预览' : '👁️ 预览需求'}
           </button>
         </div>
 
         {/* 需求预览 */}
         {showPreview && (
-          <div className="bg-gray-100 p-6 rounded-lg">
-            <h4 className="text-lg font-semibold text-gray-900 mb-3">
+          <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-gray-100 p-8">
+            <h4 className="text-xl font-bold bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent mb-4 flex items-center">
               📋 旅行需求预览
             </h4>
-            <p className="text-gray-700 leading-relaxed">
-              {generateTravelDescription(formData)}
-            </p>
+            <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-xl border border-gray-200">
+              <p className="text-gray-800 leading-relaxed text-lg">
+                {generateTravelDescription(formData)}
+              </p>
+            </div>
           </div>
         )}
 
         {/* 提交按钮 */}
-        <div className="flex justify-center pt-6">
+        <div className="flex justify-center pt-8">
           <button
             type="submit"
             disabled={loading}
-            className={`px-8 py-4 text-lg font-semibold text-white rounded-xl transition-all ${
+            className={`px-12 py-4 text-xl font-bold text-white rounded-2xl transition-all duration-300 shadow-xl ${
               loading
                 ? 'bg-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-blue-500 to-green-500 hover:from-blue-600 hover:to-green-600 transform hover:scale-105'
+                : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 hover:shadow-2xl hover:-translate-y-1'
             }`}
           >
             {loading ? (
               <div className="flex items-center">
-                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin mr-3" />
                 AI正在规划中...
               </div>
             ) : (
               <div className="flex items-center">
-                <span className="mr-2">🤖</span>
+                <span className="mr-3 text-2xl">🤖</span>
                 开始AI规划
+                <span className="ml-3 text-2xl">✨</span>
               </div>
             )}
           </button>

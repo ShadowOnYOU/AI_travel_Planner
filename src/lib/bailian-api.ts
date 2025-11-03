@@ -58,7 +58,6 @@ async function callBailianAPI(request: BailianRequest): Promise<BailianResponse>
  */
 export async function generateTravelItinerary(requirements: AIGenerationRequest): Promise<AIGenerationResponse> {
   try {
-    console.log('开始生成旅行行程:', requirements);
 
     // 创建提示词
     const prompts = createPromptTemplate(requirements);
@@ -83,8 +82,7 @@ export async function generateTravelItinerary(requirements: AIGenerationRequest)
     // 调用API
     const response = await callBailianAPI(bailianRequest);
     const content = response.choices[0].message.content;
-    
-    console.log('API原始响应:', content);
+
 
     // 清理和验证响应
     const cleanedContent = cleanAIResponse(content);
@@ -100,7 +98,7 @@ export async function generateTravelItinerary(requirements: AIGenerationRequest)
     itinerary.id = itinerary.id || `itinerary_${Date.now()}`;
     itinerary.createdAt = itinerary.createdAt || new Date().toISOString();
     
-    console.log('生成的行程数据:', itinerary);
+
 
     return {
       success: true,
@@ -136,7 +134,7 @@ export async function generateTravelItinerary(requirements: AIGenerationRequest)
  * 模拟生成行程（用于开发测试）
  */
 export async function generateMockItinerary(requirements: AIGenerationRequest): Promise<AIGenerationResponse> {
-  console.log('使用模拟数据生成行程:', requirements);
+
   
   // 模拟API调用延迟
   await new Promise(resolve => setTimeout(resolve, 3000));
@@ -277,22 +275,14 @@ function generateDayItems(day: number, requirements: AIGenerationRequest, dailyB
  * 根据配置选择使用真实API还是模拟数据
  */
 export async function generateItinerary(requirements: AIGenerationRequest): Promise<AIGenerationResponse> {
-  console.log('检查百炼API配置状态:', {
-    hasApiKey: !!BAILIAN_CONFIG.apiKey && BAILIAN_CONFIG.apiKey !== '',
-    baseUrl: BAILIAN_CONFIG.baseUrl,
-    modelId: BAILIAN_CONFIG.modelId
-  });
-  
   if (isBailianConfigured()) {
-    console.log('使用阿里云百炼真实API生成行程');
     try {
       return await generateTravelItinerary(requirements);
     } catch (error) {
-      console.error('真实API调用失败，降级到模拟数据:', error);
+      console.error('API调用失败，降级到模拟数据:', error);
       return await generateMockItinerary(requirements);
     }
   } else {
-    console.warn('阿里云百炼API未配置，使用模拟数据');
     return await generateMockItinerary(requirements);
   }
 }

@@ -111,11 +111,12 @@ export default function WebSpeechInput({
         placeholder={placeholder}
         disabled={disabled}
         className={`
-          w-full min-h-[120px] p-4 pr-24 border border-gray-300 rounded-lg
-          focus:ring-2 focus:ring-blue-500 focus:border-transparent
+          w-full min-h-[120px] p-4 pr-24 border-2 border-gray-200 rounded-xl
+          focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm
+          transition-all duration-200 hover:border-gray-400
           disabled:bg-gray-100 disabled:cursor-not-allowed
           resize-none
-          ${error ? 'border-red-500' : ''}
+          ${error ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : ''}
         `}
       />
 
@@ -127,12 +128,12 @@ export default function WebSpeechInput({
           onClick={toggleRecording}
           disabled={disabled || !isSupported}
           className={`
-            w-10 h-10 rounded-full flex items-center justify-center
-            transition-all duration-200 shadow-sm
+            w-12 h-12 rounded-xl flex items-center justify-center
+            transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5
             ${
               isListening
-                ? 'bg-red-500 hover:bg-red-600 text-white animate-pulse'
-                : 'bg-blue-500 hover:bg-blue-600 text-white'
+                ? 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white animate-pulse'
+                : 'bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white'
             }
             ${disabled || !isSupported ? 'opacity-50 cursor-not-allowed' : ''}
           `}
@@ -166,9 +167,9 @@ export default function WebSpeechInput({
             onClick={clearContent}
             disabled={disabled}
             className={`
-              w-10 h-10 rounded-full flex items-center justify-center
-              bg-gray-500 hover:bg-gray-600 text-white
-              transition-all duration-200 shadow-sm
+              w-12 h-12 rounded-xl flex items-center justify-center
+              bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white
+              transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5
               ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
             `}
             title="清除内容"
