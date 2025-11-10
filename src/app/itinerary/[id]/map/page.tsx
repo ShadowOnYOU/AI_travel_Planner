@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { ItineraryService } from '@/lib/itinerary-service';
+import { RouteService, RouteDetailResponse } from '@/lib/route-service';
 import { TravelItinerary } from '@/types/ai';
 import SimpleMapComponent from '@/components/SimpleMapComponent';
 import { MapPoint } from '@/types/travel';
+import { getCenterCoordinates, generateRealisticCoordinates } from '@/utils/geocoding';
 
 export default function ItineraryMapPage() {
   const { user } = useAuth();
@@ -18,62 +20,76 @@ export default function ItineraryMapPage() {
   const [mapPoints, setMapPoints] = useState<MapPoint[]>([]);
   const [selectedDay, setSelectedDay] = useState(0); // 0 表示显示所有天
   const [showRoutes, setShowRoutes] = useState(true);
+  const [routeDetail, setRouteDetail] = useState<{
+    fromPoint: MapPoint;
+    toPoint: MapPoint;
+    detail: RouteDetailResponse;
+  } | null>(null);
+  const [loadingRoute, setLoadingRoute] = useState(false);
 
   // 生成地图点位
   const generateMapPoints = async (itinerary: TravelItinerary) => {
-    const points: MapPoint[] = [];
-    
-    // 动态导入地理编码工具
-    const { getCenterCoordinates, generateRealisticCoordinates } = await import('@/utils/geocoding');
-    
-    // 获取目的地的中心坐标
-    const baseCoords = getCenterCoordinates(itinerary.destination);
-    
-    console.log('🗺️ [MapPage] 目的地:', itinerary.destination, '中心坐标:', baseCoords);
-    
-    itinerary.days.forEach((day) => {
-      day.items.forEach((item, index) => {
-        // 根据项目类型调整地图marker类型
-        let mapType: MapPoint['type'];
-        if (item.type === 'activity') {
-          mapType = 'attraction'; // 将活动映射为景点
-        } else {
-          mapType = item.type as MapPoint['type'];
-        }
+    try {
+      const points: MapPoint[] = [];
+      
+      // 获取目的地的中心坐标
+      const baseCoords = getCenterCoordinates(itinerary.destination);
+      
+      console.log('🗺️ [MapPage] 目的地:', itinerary.destination, '中心坐标:', baseCoords);
+      
+      itinerary.days.forEach((day) => {
+        day.items.forEach((item, index) => {
+          // 跳过交通类型的项目，地图上不显示交通信息
+          if (item.type === 'transport') {
+            return;
+          }
 
-        // 生成真实的坐标
-        let coordinates: [number, number];
-        
-        if (item.coordinates?.lng && item.coordinates?.lat) {
-          // 如果已有坐标，直接使用
-          coordinates = [item.coordinates.lng, item.coordinates.lat];
-        } else {
-          // 使用地理编码工具生成真实坐标
-          coordinates = generateRealisticCoordinates(item.title, itinerary.destination, baseCoords);
-        }
+          // 根据项目类型调整地图marker类型
+          let mapType: MapPoint['type'];
+          if (item.type === 'activity') {
+            mapType = 'attraction'; // 将活动映射为景点
+          } else {
+            mapType = item.type as MapPoint['type'];
+          }
 
-        const point: MapPoint = {
-          id: `day${day.day}-item${index}`,
-          name: item.title, // 使用title作为name
-          coordinates: coordinates,
-          type: mapType,
-          day: day.day,
-          description: item.description
-        };
-        
-        console.log('📍 [MapPage] 生成地点:', {
-          name: point.name,
-          coordinates: point.coordinates,
-          type: point.type,
-          day: point.day
+          // 生成真实的坐标
+          let coordinates: [number, number];
+          
+          if (item.coordinates?.lng && item.coordinates?.lat) {
+            // 如果已有坐标，直接使用
+            coordinates = [item.coordinates.lng, item.coordinates.lat];
+          } else {
+            // 使用地理编码工具生成真实坐标
+            coordinates = generateRealisticCoordinates(item.title, itinerary.destination, baseCoords);
+          }
+
+          const point: MapPoint = {
+            id: `day${day.day}-item${index}`,
+            name: item.title, // 使用title作为name
+            coordinates: coordinates,
+            type: mapType,
+            day: day.day,
+            description: item.description
+          };
+          
+          console.log('📍 [MapPage] 生成地点:', {
+            name: point.name,
+            coordinates: point.coordinates,
+            type: point.type,
+            day: point.day
+          });
+          
+          points.push(point);
         });
-        
-        points.push(point);
       });
-    });
-    
-    console.log('🎯 [MapPage] 生成地图点位完成:', points.length, '个地点');
-    setMapPoints(points);
+      
+      console.log('🎯 [MapPage] 生成地图点位完成:', points.length, '个地点');
+      setMapPoints(points);
+    } catch (error) {
+      console.error('❌ [MapPage] 生成地图点位失败:', error);
+      // 即使生成点位失败也不抛出异常，让地图页面正常显示
+      setMapPoints([]);
+    }
   };
 
 
@@ -83,21 +99,34 @@ export default function ItineraryMapPage() {
     const loadItinerary = async () => {
       try {
         const id = params?.id as string;
+        console.log('🔍 [MapPage] 开始加载行程数据, ID:', id, 'User:', user?.id);
+        
         if (id) {
           const data = await ItineraryService.getItineraryById(id, user?.id);
+          console.log('📦 [MapPage] 获取到的行程数据:', data);
+          
           if (data) {
             setItinerary(data);
+            console.log('✅ [MapPage] 行程数据设置成功，开始生成地图点位');
             await generateMapPoints(data);
+            console.log('✅ [MapPage] 地图点位生成完成');
           } else {
+            console.warn('⚠️ [MapPage] 未找到行程数据，跳转回列表页');
             router.push('/itinerary');
             return;
           }
         } else {
+          console.warn('⚠️ [MapPage] 没有行程ID，跳转回列表页');
           router.push('/itinerary');
           return;
         }
       } catch (error) {
-        console.error('加载行程数据失败:', error);
+        console.error('❌ [MapPage] 加载行程数据失败:', error);
+        console.error('❌ [MapPage] 错误详情:', {
+          name: (error as any)?.name,
+          message: (error as any)?.message,
+          stack: (error as any)?.stack
+        });
         router.push('/itinerary');
         return;
       }
@@ -107,9 +136,28 @@ export default function ItineraryMapPage() {
     if (user) {
       loadItinerary();
     } else {
+      console.warn('⚠️ [MapPage] 用户未登录，跳转到登录页');
       router.push('/auth/signin');
     }
   }, [user, router, params]);
+
+  // 处理路线点击事件
+  const handleRouteClick = async (fromPoint: MapPoint, toPoint: MapPoint) => {
+    try {
+      setLoadingRoute(true);
+      const detail = await RouteService.getDetailedRoute(
+        fromPoint, 
+        toPoint, 
+        itinerary?.destination || ''
+      );
+      setRouteDetail({ fromPoint, toPoint, detail });
+    } catch (error) {
+      console.error('获取路线详情失败:', error);
+      alert('获取路线详情失败，请稍后重试');
+    } finally {
+      setLoadingRoute(false);
+    }
+  };
 
   // 筛选当前天的地点
   const currentDayPoints = mapPoints.filter(point => 
@@ -236,6 +284,19 @@ export default function ItineraryMapPage() {
                   />
                   <span className="text-gray-700">显示路线</span>
                 </label>
+                
+                {/* 用户提示 */}
+                {showRoutes && (
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-3">
+                    <div className="flex items-start gap-2">
+                      <span className="text-blue-500 mt-0.5">💡</span>
+                      <div className="text-sm text-blue-700">
+                        <p className="font-medium mb-1">使用提示</p>
+                        <p>点击地图上的蓝色路线，获取详细的交通规划和导航信息。</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -271,15 +332,26 @@ export default function ItineraryMapPage() {
           <div className="lg:col-span-3">
             <div className="bg-white rounded-xl shadow-lg p-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-bold text-gray-900">
-                  {selectedDay === 0 ? '全部地点' : `第${selectedDay}天地点`}
-                </h2>
+                <div>
+                  <h2 className="text-xl font-bold text-gray-900">
+                    {selectedDay === 0 ? '全部地点' : `第${selectedDay}天地点`}
+                  </h2>
+                  {showRoutes && (
+                    <p className="text-sm text-blue-600 mt-1">
+                      💡 点击蓝色路线获取详细导航信息
+                    </p>
+                  )}
+                </div>
                 <div className="text-sm text-gray-600">
                   {selectedDay === 0 ? mapPoints.length : mapPoints.filter(p => p.day === selectedDay).length} 个地点
                 </div>
               </div>
               
-              <SimpleMapComponent points={selectedDay === 0 ? mapPoints : mapPoints.filter(p => p.day === selectedDay)} />
+              <SimpleMapComponent 
+                points={selectedDay === 0 ? mapPoints : mapPoints.filter(p => p.day === selectedDay)} 
+                showRoutes={showRoutes}
+                onRouteClick={handleRouteClick}
+              />
             </div>
 
             {/* 路线时间轴 */}
@@ -393,7 +465,102 @@ export default function ItineraryMapPage() {
         </div>
       </div>
 
+      {/* 路线详情模态框 */}
+      {routeDetail && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4">
+          <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-start mb-6">
+                <h3 className="text-xl font-bold text-gray-900">
+                  🗺️ 路线详情
+                </h3>
+                <button
+                  onClick={() => setRouteDetail(null)}
+                  className="text-gray-400 hover:text-gray-600 text-2xl"
+                >
+                  ×
+                </button>
+              </div>
 
+              <div className="space-y-4">
+                {/* 起点终点 */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-2">
+                      <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+                      <span className="font-medium text-gray-900">起点</span>
+                    </div>
+                    <span className="text-gray-600">{routeDetail.fromPoint.name}</span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <span className="w-3 h-3 bg-red-500 rounded-full"></span>
+                      <span className="font-medium text-gray-900">终点</span>
+                    </div>
+                    <span className="text-gray-600">{routeDetail.toPoint.name}</span>
+                  </div>
+                </div>
+
+                {/* 路线信息 */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    <div className="text-blue-600 font-medium mb-1">推荐交通</div>
+                    <div className="text-gray-900">{routeDetail.detail.transportation}</div>
+                  </div>
+                  <div className="bg-green-50 rounded-lg p-4">
+                    <div className="text-green-600 font-medium mb-1">预计时间</div>
+                    <div className="text-gray-900">{routeDetail.detail.duration}</div>
+                  </div>
+                  <div className="bg-purple-50 rounded-lg p-4">
+                    <div className="text-purple-600 font-medium mb-1">距离</div>
+                    <div className="text-gray-900">{routeDetail.detail.distance}</div>
+                  </div>
+                  {routeDetail.detail.cost && (
+                    <div className="bg-yellow-50 rounded-lg p-4">
+                      <div className="text-yellow-600 font-medium mb-1">费用</div>
+                      <div className="text-gray-900">{routeDetail.detail.cost}</div>
+                    </div>
+                  )}
+                </div>
+
+                {/* 详细路线 */}
+                <div className="bg-gray-50 rounded-lg p-4">
+                  <h4 className="font-medium text-gray-900 mb-2">📍 详细路线</h4>
+                  <p className="text-gray-700 whitespace-pre-line">{routeDetail.detail.route}</p>
+                </div>
+
+                {/* 小贴士 */}
+                {routeDetail.detail.tips && (
+                  <div className="bg-yellow-50 rounded-lg p-4">
+                    <h4 className="font-medium text-yellow-800 mb-2">💡 小贴士</h4>
+                    <p className="text-yellow-700">{routeDetail.detail.tips}</p>
+                  </div>
+                )}
+              </div>
+
+              {/* 关闭按钮 */}
+              <div className="mt-6 text-center">
+                <button
+                  onClick={() => setRouteDetail(null)}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  关闭
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 加载路线详情的提示 */}
+      {loadingRoute && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9998]">
+          <div className="bg-white rounded-lg p-6 text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
+            <p className="text-gray-600">正在获取路线详情...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
