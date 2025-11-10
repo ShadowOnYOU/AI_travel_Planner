@@ -1,0 +1,27 @@
+# 简化版 Dockerfile - 用于测试
+FROM 9b888f58258d
+
+WORKDIR /app
+
+# 复制 package 文件
+COPY package*.json ./
+
+# 安装依赖
+RUN npm ci --legacy-peer-deps
+
+# 复制所有文件
+COPY . .
+
+# 构建应用
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN npm run build
+
+# 暴露端口
+EXPOSE 3000
+
+# 设置环境变量
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# 启动应用
+CMD ["npm", "start"]
