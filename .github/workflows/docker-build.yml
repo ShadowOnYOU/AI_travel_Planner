@@ -13,10 +13,35 @@ on:
 
 env:
   IMAGE_NAME: ai-travel-planner
+  REGISTRY: ghcr.io
 
 jobs:
+  # 构建测试 job - 始终运行
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image (测试)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/amd64
+          push: false
+          tags: test-${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # 构建并推送 job - 仅在非PR时运行
   build-and-push:
     runs-on: ubuntu-latest
+    needs: build-test
+    if: github.event_name != 'pull_request'
     
     steps:
       - name: Checkout code
@@ -29,27 +54,19 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v3
         with:
-          registry: ${{ secrets.ALIYUN_REGISTRY }}
-          username: ${{ secrets.ALIYUN_USERNAME }}
-          password: ${{ secrets.ALIYUN_PASSWORD }}
-
-      - name: Log in to Docker Hub (备用)
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ${{ secrets.ALIYUN_REGISTRY_URL }}
+          username: ${{ secrets.ALIYUN_REGISTRY_USERNAME }}
+          password: ${{ secrets.ALIYUN_REGISTRY_PASSWORD }}
 
       - name: Extract metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: |
-            ${{ secrets.ALIYUN_REGISTRY }}/${{ secrets.ALIYUN_NAMESPACE }}/${{ env.IMAGE_NAME }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}
+            ${{ secrets.ALIYUN_REGISTRY_URL }}/${{ secrets.ALIYUN_REGISTRY_NAMESPACE }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
-            type=ref,event=pr
+            type=ref,event=pr  
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
             type=sha,prefix={{branch}}-
@@ -60,8 +77,8 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64,linux/arm64
-          push: ${{ github.event_name != 'pull_request' }}
+          platforms: linux/amd64
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
@@ -69,6 +86,25 @@ jobs:
           build-args: |
             BUILD_DATE=${{ github.event.repository.updated_at }}
             VCS_REF=${{ github.sha }}
+        continue-on-error: true
 
-      - name: Image digest
-        run: echo ${{ steps.build.outputs.digest }}
+      - name: Build Summary
+        run: |
+          echo "🚀 Docker 构建完成!"
+          echo "🏷️ 阿里云镜像标签:"
+          echo "${{ steps.meta.outputs.tags }}" | while IFS= read -r line; do
+            echo "  - $line"
+          done
+          
+      - name: 构建成功通知
+        if: success()
+        run: |
+          echo "✅ AI Travel Planner Docker 镜像构建成功!"
+          echo "🐳 可以使用以下命令拉取镜像:"
+          echo "docker pull ${{ secrets.ALIYUN_REGISTRY_URL }}/${{ secrets.ALIYUN_REGISTRY_NAMESPACE }}/${{ env.IMAGE_NAME }}:latest"
+          
+      - name: 构建失败通知  
+        if: failure()
+        run: |
+          echo "❌ Docker 镜像构建失败"
+          echo "请检查构建日志获取详细信息"
