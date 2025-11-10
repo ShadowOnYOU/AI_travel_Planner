@@ -102,8 +102,8 @@ export default function TravelForm({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* 目的地 */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                目的地 *
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                目的地
               </label>
               <WebSpeechInput
                 value={formData.destination}
@@ -118,8 +118,8 @@ export default function TravelForm({
 
             {/* 旅行人数 */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                旅行人数 *
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                同行人数
               </label>
               <input
                 type="number"
@@ -127,7 +127,8 @@ export default function TravelForm({
                 max="50"
                 value={formData.travelers}
                 onChange={(e) => handleChange('travelers', parseInt(e.target.value) || 1)}
-                className={`w-full p-4 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200 hover:border-gray-400 ${
+                style={{ color: '#111827' }}
+                className={`w-full p-4 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/90 backdrop-blur-sm transition-all duration-200 hover:border-gray-400 ${
                   errors.travelers ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200'
                 }`}
               />
@@ -138,15 +139,16 @@ export default function TravelForm({
 
             {/* 出发日期 */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                出发日期 *
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                出发日期
               </label>
               <input
                 type="date"
                 value={formData.startDate}
                 onChange={(e) => handleChange('startDate', e.target.value)}
                 min={getTodayDateString()}
-                className={`w-full p-4 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200 hover:border-gray-400 ${
+                style={{ color: '#111827' }}
+                className={`w-full p-4 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/90 backdrop-blur-sm transition-all duration-200 hover:border-gray-400 ${
                   errors.startDate ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200'
                 }`}
               />
@@ -157,15 +159,16 @@ export default function TravelForm({
 
             {/* 返回日期 */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                返回日期 *
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                返程日期
               </label>
               <input
                 type="date"
                 value={formData.endDate}
                 onChange={(e) => handleChange('endDate', e.target.value)}
                 min={formData.startDate || getTodayDateString()}
-                className={`w-full p-4 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200 hover:border-gray-400 ${
+                style={{ color: '#111827' }}
+                className={`w-full p-4 border-2 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/90 backdrop-blur-sm transition-all duration-200 hover:border-gray-400 ${
                   errors.endDate ? 'border-red-500 focus:border-red-500 focus:ring-red-200' : 'border-gray-200'
                 }`}
               />
@@ -190,7 +193,7 @@ export default function TravelForm({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* 预算范围 */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-900 mb-2">
                 预算范围 * ({formatBudget(formData.budget)})
               </label>
               <input
@@ -213,13 +216,14 @@ export default function TravelForm({
 
             {/* 旅行风格 */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-900 mb-2">
                 旅行风格
               </label>
               <select
                 value={formData.travelStyle}
                 onChange={(e) => handleChange('travelStyle', e.target.value)}
-                className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200 hover:border-gray-400"
+                style={{ color: '#111827' }}
+                className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/90 backdrop-blur-sm transition-all duration-200 hover:border-gray-400"
               >
                 {TRAVEL_STYLE_OPTIONS.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -240,7 +244,7 @@ export default function TravelForm({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* 交通方式 */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-gray-900 mb-3">
                 交通方式偏好
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -252,7 +256,7 @@ export default function TravelForm({
                     className={`p-3 rounded-lg border-2 transition-all ${
                       formData.transportation === option.value
                         ? 'border-blue-500 bg-blue-50 text-blue-700'
-                        : 'border-gray-200 hover:border-gray-300'
+                        : 'border-gray-200 hover:border-gray-300 text-gray-700 hover:text-gray-800'
                     }`}
                   >
                     <div className="text-lg">{option.emoji}</div>
@@ -264,7 +268,7 @@ export default function TravelForm({
 
             {/* 住宿偏好 */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-gray-900 mb-3">
                 住宿偏好
               </label>
               <div className="grid grid-cols-2 gap-2">
@@ -276,7 +280,7 @@ export default function TravelForm({
                     className={`p-3 rounded-lg border-2 transition-all ${
                       formData.accommodation === option.value
                         ? 'border-green-500 bg-green-50 text-green-700'
-                        : 'border-gray-200 hover:border-gray-300'
+                        : 'border-gray-200 hover:border-gray-300 text-gray-700 hover:text-gray-800'
                     }`}
                   >
                     <div className="text-lg">{option.emoji}</div>
@@ -303,7 +307,7 @@ export default function TravelForm({
                 className={`p-3 rounded-lg border-2 transition-all ${
                   formData.interests.includes(option.value)
                     ? 'border-yellow-500 bg-yellow-100 text-yellow-800'
-                    : 'border-gray-200 hover:border-gray-300'
+                    : 'border-gray-200 hover:border-gray-300 text-gray-700 hover:text-gray-800'
                 }`}
               >
                 <div className="text-lg mb-1">{option.emoji}</div>
@@ -315,7 +319,7 @@ export default function TravelForm({
 
         {/* 详细偏好 */}
         <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-gray-100 p-8">
-          <h3 className="text-2xl font-bold bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent mb-6 flex items-center">
+          <h3 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6 flex items-center">
             📝 详细偏好
           </h3>
           
@@ -349,7 +353,7 @@ export default function TravelForm({
         {/* 需求预览 */}
         {showPreview && (
           <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-lg border border-gray-100 p-8">
-            <h4 className="text-xl font-bold bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent mb-4 flex items-center">
+            <h4 className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent mb-4 flex items-center">
               📋 旅行需求预览
             </h4>
             <div className="bg-gradient-to-r from-gray-50 to-gray-100 p-6 rounded-xl border border-gray-200">

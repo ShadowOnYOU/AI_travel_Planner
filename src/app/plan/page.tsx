@@ -107,6 +107,13 @@ export default function PlanPage() {
                 我的行程
               </button>
               <button
+                onClick={() => router.push('/config')}
+                className="text-gray-600 hover:text-gray-800 px-3 py-2 rounded-lg hover:bg-gray-100 transition-all duration-200"
+                title="系统配置"
+              >
+                ⚙️
+              </button>
+              <button
                 onClick={() => signOut()}
                 className="text-gray-600 hover:text-gray-800 px-3 py-2 rounded-lg hover:bg-gray-100 transition-all duration-200"
               >

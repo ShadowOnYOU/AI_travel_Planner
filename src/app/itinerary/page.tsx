@@ -172,6 +172,13 @@ export default function ItineraryListPage() {
               >
                 ✨ 新建行程
               </button>
+              <button
+                onClick={() => router.push('/config')}
+                className="text-gray-600 hover:text-gray-800 px-3 py-2 rounded-lg hover:bg-gray-100 transition-all duration-200"
+                title="系统配置"
+              >
+                ⚙️
+              </button>
               {user?.email && (
                 <span className="text-sm text-gray-600 hidden sm:inline">
                   欢迎，{user.email}

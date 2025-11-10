@@ -122,6 +122,7 @@ export interface BailianConfig {
   apiKey: string;
   baseUrl: string;
   modelId: string;
+  workspaceId?: string;
 }
 
 // API请求和响应格式

@@ -66,7 +66,7 @@ export default function SignInPage() {
         </div>
 
         {/* 主要登录卡片 */}
-        <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-100 p-8">
+        <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-100 p-8">
           {/* Logo和标题 */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -83,7 +83,7 @@ export default function SignInPage() {
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div>
-                <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="email-address" className="block text-sm font-medium text-gray-900 mb-2">
                   邮箱地址
                 </label>
                 <input
@@ -94,12 +94,13 @@ export default function SignInPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200 hover:border-gray-400"
+                  style={{ color: '#111827' }}
+                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/90 backdrop-blur-sm transition-all duration-200 hover:border-gray-400"
                   placeholder="请输入您的邮箱地址"
                 />
               </div>
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-2">
                   密码
                 </label>
                 <input
@@ -110,7 +111,8 @@ export default function SignInPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200 hover:border-gray-400"
+                  style={{ color: '#111827' }}
+                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/90 backdrop-blur-sm transition-all duration-200 hover:border-gray-400"
                   placeholder="请输入您的密码"
                 />
               </div>

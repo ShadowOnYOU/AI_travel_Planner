@@ -110,9 +110,10 @@ export default function WebSpeechInput({
         onChange={handleInputChange}
         placeholder={placeholder}
         disabled={disabled}
+        style={{ color: '#111827' }}
         className={`
           w-full min-h-[120px] p-4 pr-24 border-2 border-gray-200 rounded-xl
-          focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm
+          focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/90 backdrop-blur-sm
           transition-all duration-200 hover:border-gray-400
           disabled:bg-gray-100 disabled:cursor-not-allowed
           resize-none

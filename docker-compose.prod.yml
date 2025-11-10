@@ -2,12 +2,8 @@ version: '3.8'
 
 services:
   ai-travel-planner:
-    # 使用预构建镜像（推荐）或本地构建
-    image: ${DOCKER_IMAGE:-ghcr.io/shadowonyou/ai-travel-planner:latest}
-    # 如果镜像不存在，回退到本地构建
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # 使用GitHub Container Registry预构建镜像
+    image: ghcr.io/shadowonyou/ai-travel-planner:latest
     container_name: ai-travel-planner
     ports:
       - "3000:3000"

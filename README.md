@@ -88,7 +88,13 @@ docker-compose up -d
 # 方法2: 使用自动化脚本
 ./docker-start.sh
 
-# 方法3: 手动构建和运行
+# 方法3: 使用阿里云预构建镜像（最快）⭐
+docker run -d \
+  --name ai-travel-planner \
+  -p 3000:3000 \
+  crpi-ttmopfgqdmld0jn5.cn-hangzhou.personal.cr.aliyuncs.com/ai_by_sgh/ai-travel-planner:latest
+
+# 方法4: 手动构建和运行
 DOCKER_BUILDKIT=0 docker build -t ai-travel-planner:latest .
 docker run -d \
   --name ai-travel-planner \

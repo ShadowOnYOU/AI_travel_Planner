@@ -38,10 +38,10 @@ export default function NewPlanPage() {
                 AI Travel Planner
               </Link>
               <span className="text-gray-300">→</span>
-              <span className="text-gray-600">创建新行程</span>
+              <span className="text-gray-600 dark:text-gray-300">创建新行程</span>
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-gray-600">欢迎, {user.email}</span>
+              <span className="text-gray-600 dark:text-gray-300">欢迎, {user.email}</span>
               <Link
                 href="/"
                 className="text-gray-600 hover:text-gray-800"
@@ -56,10 +56,10 @@ export default function NewPlanPage() {
       {/* Main Content */}
       <main className="max-w-4xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">
             创建新的旅行计划
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-300">
             告诉我们您的旅行需求，AI 将为您生成完美的行程安排
           </p>
         </div>
@@ -67,26 +67,26 @@ export default function NewPlanPage() {
         <div className="bg-white rounded-lg shadow p-8">
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🚧</div>
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-              功能开发中
+                        <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+              ✨ 智能行程规划
             </h2>
-            <p className="text-gray-600 mb-6">
-              旅行需求输入和语音识别功能即将上线！
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              我们的 AI 助手将根据您的偏好，为您量身定制最适合的旅行方案
             </p>
             <div className="space-y-3 text-left max-w-md mx-auto">
-              <div className="flex items-center space-x-2 text-gray-600">
+              <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
                 <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                 <span>✅ 用户认证系统</span>
               </div>
-              <div className="flex items-center space-x-2 text-gray-600">
+              <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
                 <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
                 <span>🔄 语音识别组件 (进行中)</span>
               </div>
-              <div className="flex items-center space-x-2 text-gray-600">
+              <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
                 <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
                 <span>⏳ 旅行需求表单</span>
               </div>
-              <div className="flex items-center space-x-2 text-gray-600">
+              <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-300">
                 <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
                 <span>⏳ AI行程生成</span>
               </div>

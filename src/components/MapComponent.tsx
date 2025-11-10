@@ -244,7 +244,7 @@ export default function MapComponent({
           title: point.name,
           content: `<div style="background: white; border-radius: 8px; padding: 4px 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #ddd;">
                       <span style="font-size: 16px;">${getMarkerIcon(point.type)}</span>
-                      <span style="margin-left: 4px; font-size: 12px; font-weight: 500;">${point.name}</span>
+                      <span style="margin-left: 4px; font-size: 12px; font-weight: 500; color: #374151;">${point.name}</span>
                     </div>`,
           anchor: 'center',
         });

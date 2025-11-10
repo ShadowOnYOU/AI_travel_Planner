@@ -52,6 +52,13 @@ export default function Home() {
                   >
                     我的行程
                   </Link>
+                  <Link
+                    href="/config"
+                    className="text-gray-600 hover:text-gray-800 px-3 py-2 rounded-lg hover:bg-gray-100 transition-all duration-200 flex items-center"
+                    title="系统配置"
+                  >
+                    ⚙️
+                  </Link>
                   <button
                     onClick={signOut}
                     className="text-gray-600 hover:text-gray-800 px-3 py-2 rounded-lg hover:bg-gray-100 transition-all duration-200"

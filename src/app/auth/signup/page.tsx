@@ -81,7 +81,7 @@ export default function SignUpPage() {
         </div>
 
         {/* 主要注册卡片 */}
-        <div className="bg-white/70 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-100 p-8">
+        <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl border border-gray-100 p-8">
           {/* Logo和标题 */}
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
@@ -98,8 +98,8 @@ export default function SignUpPage() {
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-4">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                  姓名 <span className="text-gray-400">(可选)</span>
+                                <label htmlFor="name" className="block text-sm font-medium text-gray-900 mb-2">
+                  姓名
                 </label>
                 <input
                   id="name"
@@ -107,12 +107,13 @@ export default function SignUpPage() {
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200 hover:border-gray-400"
+                  style={{ color: '#111827' }}
+                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/90 backdrop-blur-sm transition-all duration-200 hover:border-gray-400"
                   placeholder="请输入您的姓名"
                 />
               </div>
               <div>
-                <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="email-address" className="block text-sm font-medium text-gray-900 mb-2">
                   邮箱地址 <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -123,12 +124,13 @@ export default function SignUpPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200 hover:border-gray-400"
+                  style={{ color: '#111827' }}
+                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/90 backdrop-blur-sm transition-all duration-200 hover:border-gray-400"
                   placeholder="请输入您的邮箱地址"
                 />
               </div>
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-2">
                   密码 <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -139,12 +141,13 @@ export default function SignUpPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200 hover:border-gray-400"
+                  style={{ color: '#111827' }}
+                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/90 backdrop-blur-sm transition-all duration-200 hover:border-gray-400"
                   placeholder="请输入密码 (至少6位)"
                 />
               </div>
               <div>
-                <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-900 mb-2">
                   确认密码 <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -155,7 +158,8 @@ export default function SignUpPage() {
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/80 backdrop-blur-sm transition-all duration-200 hover:border-gray-400"
+                  style={{ color: '#111827' }}
+                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white/90 backdrop-blur-sm transition-all duration-200 hover:border-gray-400"
                   placeholder="请再次输入密码"
                 />
               </div>

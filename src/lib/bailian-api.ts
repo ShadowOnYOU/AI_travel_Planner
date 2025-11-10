@@ -2,19 +2,36 @@ import { BailianConfig, BailianRequest, BailianResponse, AIGenerationRequest, AI
 import { createPromptTemplate, validateAIResponse, cleanAIResponse } from '@/utils/ai-prompts';
 
 /**
- * 阿里云百炼平台API配置
+ * 获取百炼API配置（优先使用localStorage，其次使用环境变量）
  */
-const BAILIAN_CONFIG: BailianConfig = {
-  apiKey: process.env.NEXT_PUBLIC_BAILIAN_API_KEY || '',
-  baseUrl: process.env.NEXT_PUBLIC_BAILIAN_BASE_URL || 'https://dashscope.aliyuncs.com/api/v1',
-  modelId: process.env.NEXT_PUBLIC_BAILIAN_MODEL_ID || 'qwen-turbo'
-};
+function getBailianConfig(): BailianConfig {
+  if (typeof window !== 'undefined') {
+    const apiKey = localStorage.getItem('bailian_api_key') || process.env.NEXT_PUBLIC_BAILIAN_API_KEY || '';
+    const workspaceId = localStorage.getItem('bailian_workspace_id') || process.env.NEXT_PUBLIC_BAILIAN_WORKSPACE_ID || '';
+    
+    return {
+      apiKey,
+      baseUrl: process.env.NEXT_PUBLIC_BAILIAN_BASE_URL || 'https://dashscope.aliyuncs.com/api/v1',
+      modelId: process.env.NEXT_PUBLIC_BAILIAN_MODEL_ID || 'qwen-turbo',
+      workspaceId
+    };
+  }
+  
+  // 服务器端使用环境变量
+  return {
+    apiKey: process.env.NEXT_PUBLIC_BAILIAN_API_KEY || '',
+    baseUrl: process.env.NEXT_PUBLIC_BAILIAN_BASE_URL || 'https://dashscope.aliyuncs.com/api/v1',
+    modelId: process.env.NEXT_PUBLIC_BAILIAN_MODEL_ID || 'qwen-turbo',
+    workspaceId: process.env.NEXT_PUBLIC_BAILIAN_WORKSPACE_ID || ''
+  };
+}
 
 /**
  * 检查API配置是否完整
  */
 export function isBailianConfigured(): boolean {
-  return !!(BAILIAN_CONFIG.apiKey && BAILIAN_CONFIG.baseUrl && BAILIAN_CONFIG.modelId);
+  const config = getBailianConfig();
+  return !!(config.apiKey && config.baseUrl && config.modelId);
 }
 
 /**
@@ -22,19 +39,20 @@ export function isBailianConfigured(): boolean {
  */
 async function callBailianAPI(request: BailianRequest): Promise<BailianResponse> {
   if (!isBailianConfigured()) {
-    throw new Error('阿里云百炼平台API未正确配置，请检查环境变量');
+    throw new Error('阿里云百炼平台API未正确配置，请在设置页面配置或检查环境变量');
   }
 
-  const response = await fetch(`${BAILIAN_CONFIG.baseUrl}/chat/completions`, {
+  const config = getBailianConfig();
+  const response = await fetch(`${config.baseUrl}/chat/completions`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${BAILIAN_CONFIG.apiKey}`,
+      'Authorization': `Bearer ${config.apiKey}`,
       'X-DashScope-SSE': 'disable'
     },
     body: JSON.stringify({
       ...request,
-      model: BAILIAN_CONFIG.modelId
+      model: config.modelId
     })
   });
 
@@ -54,6 +72,32 @@ async function callBailianAPI(request: BailianRequest): Promise<BailianResponse>
 }
 
 /**
+ * 通用的AI响应生成函数
+ */
+export async function generateResponse(prompt: string): Promise<string> {
+  try {
+    const config = getBailianConfig();
+    const bailianRequest: BailianRequest = {
+      model: config.modelId,
+      messages: [
+        {
+          role: 'user',
+          content: prompt
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 2000
+    };
+
+    const response = await callBailianAPI(bailianRequest);
+    return response.choices[0].message.content;
+  } catch (error) {
+    console.error('AI响应生成失败:', error);
+    throw error;
+  }
+}
+
+/**
  * 生成旅行行程
  */
 export async function generateTravelItinerary(requirements: AIGenerationRequest): Promise<AIGenerationResponse> {
@@ -63,8 +107,9 @@ export async function generateTravelItinerary(requirements: AIGenerationRequest)
     const prompts = createPromptTemplate(requirements);
     
     // 构建API请求
+    const config = getBailianConfig();
     const bailianRequest: BailianRequest = {
-      model: BAILIAN_CONFIG.modelId,
+      model: config.modelId,
       messages: [
         {
           role: 'system',
