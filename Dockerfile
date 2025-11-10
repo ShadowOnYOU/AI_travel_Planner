@@ -18,8 +18,15 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# 构建应用
-ENV NEXT_TELEMETRY_DISABLED 1
+# 构建应用 - 设置必要的环境变量
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NEXT_PUBLIC_AMAP_KEY=1e967f9e5d863f52e8e76a8b7c381669
+ENV NEXT_PUBLIC_BAILIAN_API_KEY=sk-7b2ff1814ecb499d89d56e86af030b19
+ENV NEXT_PUBLIC_BAILIAN_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+ENV NEXT_PUBLIC_BAILIAN_MODEL_ID=qwen-plus
+ENV NEXT_PUBLIC_SUPABASE_URL=https://untvtsdpychqwikqdkgg.supabase.co
+ENV NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVudHZ0c2RweWNocXdpa3Fka2dnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjA1NjM4NjQsImV4cCI6MjA3NjEzOTg2NH0.3lTm4PFwCxxKWgjE5YFP90I0oQgNKn-scOKCOqitIWs
+
 RUN npm run build
 
 # 生产运行阶段
