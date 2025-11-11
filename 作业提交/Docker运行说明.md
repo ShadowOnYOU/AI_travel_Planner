@@ -55,6 +55,31 @@ cd AI_travel_Planner
 http://localhost:3000
 ```
 
+### ⚠️ 重要：首次使用必须配置API密钥
+
+**在使用任何功能之前，必须先进行API密钥配置，否则核心功能无法正常工作！**
+
+#### 配置步骤：
+1. **访问配置页面**：http://localhost:3000/config
+
+2. **配置高德地图API**：
+   - 点击"高德地图"标签
+   - API Key: `1e967f9e5d863f52e8e76a8b7c381669`
+   - 点击"测试连接"验证
+
+3. **配置阿里云百炼AI**：
+   - 点击"阿里云百炼"标签
+   - API Key: `sk-7b2ff1814ecb499d89d56e86af030b19`
+   - Base URL: `https://dashscope.aliyuncs.com/compatible-mode/v1`
+   - Model ID: `qwen-plus`
+   - 点击"测试连接"验证
+
+4. **保存配置**：点击"💾 保存配置"
+
+#### 验证成功：
+- 所有API显示"✅ 已连接"状态
+- 可以正常使用AI规划和地图功能
+
 ## 🔧 容器管理
 
 ### 查看状态
