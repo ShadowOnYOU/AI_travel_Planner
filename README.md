@@ -178,6 +178,21 @@ npm run start
 
 ## 🔑 API Keys 配置
 
+### 🧪 测试账户（供助教使用）
+
+为方便助教和评审人员快速体验项目功能：
+
+```
+📧 测试用户名: 335933870@qq.com
+🔐 测试密码: 123321
+```
+
+**快速体验步骤**：
+1. 启动 Docker 容器
+2. 访问 http://localhost:3000/auth/signin
+3. 使用上述测试账户登录
+4. 体验完整的 AI 行程规划功能
+
 ### 教学/演示用 API Keys（已包含在镜像中）
 
 以下 API Keys 已配置在 Docker 镜像中，**有效期至 2025-03-10**，供助教批改作业使用：
@@ -188,12 +203,23 @@ NEXT_PUBLIC_AMAP_KEY=1e967f9e5d863f52e8e76a8b7c381669
 
 # 阿里云百炼 AI API Key
 NEXT_PUBLIC_BAILIAN_API_KEY=sk-7b2ff1814ecb499d89d56e86af030b19
+
+# Supabase 数据库（包含用户认证和数据存储）
+NEXT_PUBLIC_SUPABASE_URL=https://untvtsdpychqwikqdkgg.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 ```
 
-**⚠️ 注意事项：**
+**⚠️ 重要注意事项：**
 - 这些是有限额度的测试 Key，仅供演示和评估使用
+- **Supabase 免费版密钥会定期过期**，如遇到登录/保存问题属正常情况
+- 系统会自动降级到本地存储，核心功能不受影响
 - 请勿在生产环境或大规模使用中使用
 - 如需长期使用，请申请自己的 API Keys
+
+**🚨 如果 Supabase 过期**：
+- 症状：用户注册/登录异常，行程保存失败
+- 影响：仅用户数据持久化功能受限
+- 解决：AI 规划、地图展示等核心功能仍正常工作
 
 ### 申请自己的 API Keys
 

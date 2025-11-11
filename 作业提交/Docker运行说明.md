@@ -233,13 +233,48 @@ HTTP/1.1 200 OK
 ...
 ```
 
+## 🧪 测试账户信息
+
+为方便助教和评审人员测试，提供以下测试账户：
+
+```
+用户名：335933870@qq.com
+密码：123321
+```
+
+**使用说明**：
+1. 访问 http://localhost:3000/auth/signin
+2. 使用上述账户登录
+3. 可以直接体验所有功能，无需重新注册
+
+## ⚠️ 重要提醒：Supabase 数据库密钥
+
+**Supabase 密钥会定期过期**，如果遇到以下情况，说明需要更新数据库密钥：
+
+### 过期症状
+- 用户注册/登录失败
+- 行程保存功能异常
+- 控制台出现数据库连接错误
+- 页面显示 "Authentication failed" 等错误
+
+### 解决方案
+1. **联系开发者**获取最新的 Supabase 密钥
+2. **临时解决**：系统会自动降级到本地存储模式，核心功能仍可正常使用
+3. **验证功能**：可通过配置页面 http://localhost:3000/config 测试数据库连接
+
+### 联系信息
+- **开发者**：ShadowOnYOU
+- **GitHub Issues**：https://github.com/ShadowOnYOU/AI_travel_Planner/issues
+- **邮箱**：[如需要可提供]
+
 ## 📞 技术支持
 
 如遇到问题：
 1. 首先检查 Docker 日志：`docker logs ai-travel-planner`
 2. 确认系统满足最低要求
-3. 参考故障排查部分
-4. 查看项目 GitHub 页面：https://github.com/ShadowOnYOU/AI_travel_Planner
+3. **检查 Supabase 密钥是否过期**（见上方重要提醒）
+4. 参考故障排查部分
+5. 查看项目 GitHub 页面：https://github.com/ShadowOnYOU/AI_travel_Planner
 
 ---
 
