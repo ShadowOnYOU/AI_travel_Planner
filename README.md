@@ -93,6 +93,8 @@ docker run -d \
   --name ai-travel-planner \
   -p 3000:3000 \
   --platform linux/amd64 \
+  -e NEXT_PUBLIC_AMAP_KEY=f47ba60794341f862ce2c49df4e2e14b \
+  -e NEXT_PUBLIC_BAILIAN_API_KEY=sk-9404820cdc734865a5301c966c4ad016 \
   crpi-ttmopfgqdmld0jn5.cn-hangzhou.personal.cr.aliyuncs.com/ai_by_sgh/ai-travel-planner:latest
 
 # 方法4: 手动构建和运行
