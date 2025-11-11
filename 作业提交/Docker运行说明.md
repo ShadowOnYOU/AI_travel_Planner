@@ -29,8 +29,8 @@ docker run -d --name ai-travel-planner -p 3000:3000 --platform linux/amd64 crpi-
 ### 方式二：分步运行
 
 ```bash
-# 1. 拉取镜像
-docker pull crpi-ttmopfgqdmld0jn5.cn-hangzhou.personal.cr.aliyuncs.com/ai_by_sgh/ai-travel-planner:latest
+# 1. 拉取镜像（指定平台以兼容Apple Silicon Mac）
+docker pull --platform linux/amd64 crpi-ttmopfgqdmld0jn5.cn-hangzhou.personal.cr.aliyuncs.com/ai_by_sgh/ai-travel-planner:latest
 
 # 2. 运行容器
 docker run -d \
