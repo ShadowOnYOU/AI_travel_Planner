@@ -92,6 +92,7 @@ docker-compose up -d
 docker run -d \
   --name ai-travel-planner \
   -p 3000:3000 \
+  --platform linux/amd64 \
   crpi-ttmopfgqdmld0jn5.cn-hangzhou.personal.cr.aliyuncs.com/ai_by_sgh/ai-travel-planner:latest
 
 # 方法4: 手动构建和运行

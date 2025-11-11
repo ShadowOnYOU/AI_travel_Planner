@@ -83,9 +83,14 @@ export default function ItineraryDetailPage() {
   };
 
   // 保存为我的行程
-  const saveToMyItineraries = async () => {
-    if (!itinerary) return;
+  const [isSaving, setIsSaving] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
+  const saveToMyItineraries = async () => {
+    if (!itinerary || isSaving) return;
+
+    setIsSaving(true);
+    
     try {
       // 确保行程有所有必需的字段
       const savedItinerary: TravelItinerary = {
@@ -100,16 +105,64 @@ export default function ItineraryDetailPage() {
       
       await ItineraryService.saveItinerary(savedItinerary, user?.id);
       
-      alert('行程已保存到我的行程列表！');
+      setIsSaved(true);
       
-      // 可选：跳转到行程列表页面确认
-      const shouldRedirect = confirm('行程已保存！是否跳转到我的行程列表查看？');
-      if (shouldRedirect) {
-        router.push('/itinerary');
-      }
+      // 使用更友好的通知
+      const notification = document.createElement('div');
+      notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 transform transition-all duration-300';
+      notification.innerHTML = `
+        <div class="flex items-center space-x-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span class="font-medium">✅ 行程保存成功！</span>
+        </div>
+        <p class="text-sm mt-1">已添加到您的个人行程库</p>
+      `;
+      document.body.appendChild(notification);
+      
+      // 3秒后移除通知
+      setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+          if (document.body.contains(notification)) {
+            document.body.removeChild(notification);
+          }
+        }, 300);
+      }, 3000);
+      
+      // 询问是否跳转到行程列表
+      setTimeout(() => {
+        const shouldRedirect = confirm('🎉 行程已成功保存到您的行程库！\n\n是否现在跳转到"我的行程"页面查看所有保存的行程？');
+        if (shouldRedirect) {
+          router.push('/itinerary');
+        }
+      }, 1000);
+      
     } catch (error) {
       console.error('保存行程失败:', error);
-      alert('保存失败，请稍后重试。请检查控制台获取更多信息。');
+      
+      // 错误通知
+      const errorNotification = document.createElement('div');
+      errorNotification.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg z-50';
+      errorNotification.innerHTML = `
+        <div class="flex items-center space-x-2">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.728-.833-2.498 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+          <span class="font-medium">❌ 保存失败</span>
+        </div>
+        <p class="text-sm mt-1">请稍后重试或联系技术支持</p>
+      `;
+      document.body.appendChild(errorNotification);
+      
+      setTimeout(() => {
+        if (document.body.contains(errorNotification)) {
+          document.body.removeChild(errorNotification);
+        }
+      }, 5000);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -180,9 +233,40 @@ export default function ItineraryDetailPage() {
               </button>
               <button
                 onClick={saveToMyItineraries}
-                className="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+                disabled={isSaving || isSaved}
+                className={`px-6 py-2 rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 font-medium border-2 ${
+                  isSaved 
+                    ? 'bg-gray-400 border-gray-400 text-white cursor-not-allowed'
+                    : isSaving 
+                      ? 'bg-green-400 border-green-400 text-white cursor-wait'
+                      : 'bg-green-600 border-green-500 text-white hover:bg-green-700 animate-pulse'
+                }`}
               >
-                保存行程
+                <span className="flex items-center">
+                  {isSaving ? (
+                    <>
+                      <svg className="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      正在保存...
+                    </>
+                  ) : isSaved ? (
+                    <>
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      ✅ 已保存
+                    </>
+                  ) : (
+                    <>
+                      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                      💾 保存到我的行程
+                    </>
+                  )}
+                </span>
               </button>
               <button
                 onClick={editItinerary}
@@ -199,6 +283,66 @@ export default function ItineraryDetailPage() {
       </nav>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* 保存提示横幅 */}
+        <div className="bg-gradient-to-r from-amber-50 to-orange-50 border-l-4 border-amber-400 rounded-lg p-6 mb-6">
+          <div className="flex items-center">
+            <div className="flex-shrink-0">
+              <svg className="h-8 w-8 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="ml-4 flex-1">
+              <h3 className="text-lg font-semibold text-amber-800">
+                🎉 恭喜！您的专属旅行计划已生成完成
+              </h3>
+              <p className="text-amber-700 mt-1">
+                <span className="font-medium">重要提醒</span>：请点击右上角的 
+                <span className="inline-flex items-center mx-1 px-3 py-1 bg-green-600 text-white text-sm rounded-md font-medium">
+                  保存行程
+                </span> 
+                按钮，将此行程添加到您的个人行程库中，方便随时查看和管理！
+              </p>
+            </div>
+            <div className="flex-shrink-0">
+              <button
+                onClick={saveToMyItineraries}
+                disabled={isSaving || isSaved}
+                className={`inline-flex items-center px-6 py-3 text-sm font-medium rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 ${
+                  isSaved 
+                    ? 'bg-gray-400 text-white cursor-not-allowed'
+                    : isSaving 
+                      ? 'bg-green-400 text-white cursor-wait'
+                      : 'bg-green-600 text-white hover:bg-green-700'
+                }`}
+              >
+                {isSaving ? (
+                  <>
+                    <svg className="animate-spin w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    保存中...
+                  </>
+                ) : isSaved ? (
+                  <>
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    ✅ 已保存成功
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    🚀 立即保存行程
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+
         {/* 行程标题 */}
         <div className="bg-white rounded-xl shadow-lg p-8 mb-8">
           <div className="text-center mb-6">

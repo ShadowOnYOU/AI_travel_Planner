@@ -132,9 +132,47 @@ export default function PlanPage() {
             <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent mb-4">
               创建新行程
             </h2>
-            <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 leading-relaxed max-w-3xl mx-auto mb-6">
               告诉我们您的旅行偏好，AI将为您量身定制完美的行程计划 ✨
             </p>
+            
+            {/* 操作流程提示 */}
+            <div className="max-w-4xl mx-auto">
+              <div className="bg-gradient-to-r from-blue-50 via-purple-50 to-pink-50 rounded-2xl p-6 border border-blue-100">
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">📋 使用流程</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-full flex items-center justify-center font-bold text-sm">1</div>
+                    <div className="text-left">
+                      <div className="font-medium text-gray-800">填写旅行需求</div>
+                      <div className="text-sm text-gray-600">目的地、天数、预算等</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="flex-shrink-0 w-8 h-8 bg-purple-500 text-white rounded-full flex items-center justify-center font-bold text-sm">2</div>
+                    <div className="text-left">
+                      <div className="font-medium text-gray-800">AI生成专属行程</div>
+                      <div className="text-sm text-gray-600">智能规划路线和景点</div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <div className="flex-shrink-0 w-8 h-8 bg-green-500 text-white rounded-full flex items-center justify-center font-bold text-sm">3</div>
+                    <div className="text-left">
+                      <div className="font-medium text-gray-800">保存到个人行程库</div>
+                      <div className="text-sm text-gray-600">点击"保存行程"按钮</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 p-3 bg-amber-100 rounded-lg border-l-4 border-amber-400">
+                  <p className="text-sm text-amber-800">
+                    <span className="font-medium">💡 重要提示：</span>
+                    生成行程后，请务必点击页面上的 
+                    <span className="inline-block mx-1 px-2 py-1 bg-green-500 text-white text-xs rounded font-medium">保存行程</span> 
+                    按钮，这样才能将行程添加到您的个人行程库中！
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
           
           <TravelForm onSubmit={handleSubmit} loading={isGenerating} />
