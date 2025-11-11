@@ -261,7 +261,7 @@ export default function ConfigGuide() {
                   value={amapKey}
                   onChange={(e) => setAmapKey(e.target.value)}
                   placeholder="请输入高德地图 API Key"
-                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white transition-all duration-200 hover:border-gray-400"
+                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 transition-all duration-200 hover:border-gray-400"
                 />
                 <p className="mt-2 text-sm text-gray-500">
                   用于地图显示和路径规划功能
@@ -344,7 +344,7 @@ export default function ConfigGuide() {
                   value={bailianApiKey}
                   onChange={(e) => setBailianApiKey(e.target.value)}
                   placeholder="请输入百炼 API Key"
-                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white transition-all duration-200 hover:border-gray-400"
+                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-gray-900 placeholder-gray-500 transition-all duration-200 hover:border-gray-400"
                 />
                 <p className="mt-2 text-sm text-gray-500">
                   用于 AI 行程生成功能
@@ -360,7 +360,7 @@ export default function ConfigGuide() {
                   value={bailianWorkspaceId}
                   onChange={(e) => setBailianWorkspaceId(e.target.value)}
                   placeholder="请输入工作空间 ID"
-                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white transition-all duration-200 hover:border-gray-400"
+                  className="w-full p-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white text-gray-900 placeholder-gray-500 transition-all duration-200 hover:border-gray-400"
                 />
                 <p className="mt-2 text-sm text-gray-500">
                   应用所属的工作空间标识

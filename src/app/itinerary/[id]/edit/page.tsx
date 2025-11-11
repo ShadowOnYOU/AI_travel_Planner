@@ -175,7 +175,7 @@ export default function EditItineraryPage() {
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
                 placeholder="输入行程标题"
               />
             </div>
@@ -189,7 +189,7 @@ export default function EditItineraryPage() {
                 type="text"
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
                 placeholder="输入目的地"
               />
             </div>
@@ -204,7 +204,7 @@ export default function EditItineraryPage() {
                   type="number"
                   value={totalBudget}
                   onChange={(e) => setTotalBudget(Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
                   min="0"
                 />
               </div>
@@ -218,7 +218,7 @@ export default function EditItineraryPage() {
                   type="number"
                   value={travelers}
                   onChange={(e) => setTravelers(Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
                   min="1"
                 />
               </div>
@@ -232,7 +232,7 @@ export default function EditItineraryPage() {
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as TravelItinerary['status'])}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900"
               >
                 <option value="draft">草稿</option>
                 <option value="confirmed">已确认</option>
@@ -250,7 +250,7 @@ export default function EditItineraryPage() {
                 value={summary}
                 onChange={(e) => setSummary(e.target.value)}
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500"
                 placeholder="描述您的行程..."
               />
             </div>
